@@ -33,7 +33,7 @@ Pass `ice_servers` directly to `new RTCPeerConnection({ iceServers })`.
 |----------|---------|
 | `PEER_TURN_URLS` | Comma-separated `turn:` / `turns:` URIs |
 | `PEER_TURN_USERNAME` + `PEER_TURN_CREDENTIAL` | Static TURN login |
-| `PEER_TURN_AUTH_SECRET` | Coturn `use-auth-secret` — API mints **time-limited** creds per tenant (`expiry:app_id`) |
+| `PEER_TURN_AUTH_SECRET` | Coturn shared secret — API mints time-limited TURN credentials per tenant |
 | `PEER_TURN_CREDENTIAL_TTL_SEC` | Lifetime for minted creds (default 86400) |
 | `PEER_STUN_URLS` | Optional STUN list (defaults to Google public STUN) |
 | `PEER_OPEN_RELAY_FALLBACK` | If `true` and no `PEER_TURN_URLS`, returns Metered Open Relay (dev only) |
@@ -96,7 +96,7 @@ Rodent hosts can take **paid session bookings** (card checkout via Stripe) while
 | GET | `/api/v1/rodent/hosts/{hostID}/booking-page` | Public — host profile + occupied slots |
 | GET/PUT | `/api/v1/rodent/booking-settings` | Host default `price_cents` (Pro if &gt; 0) |
 | POST | `/api/v1/rodent/bookings` | **Registered** — creates `scheduled_streams` row |
-| POST | `/api/v1/payments/fiat/booking` | **Registered** — Stripe Checkout; 97% host share |
+| POST | `/api/v1/payments/fiat/booking` | **Registered** — Stripe Checkout for paid bookings |
 
 Calendar slots and Google Calendar OAuth: `/api/v1/scheduled`, `/api/v1/integrations/google/calendar/*`. See [`API.md`](./API.md).
 

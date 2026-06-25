@@ -4,7 +4,7 @@ Build a live-streaming app on Bubble using the Locust API (`api.driftin.live`). 
 
 ## Before you start
 
-1. Create a tenant at https://admin.driftin.live (`/portal` → create account).  
+1. Create a tenant at https://www.niilox.com (`/portal` → create account).  
 2. Note your **`app_id`** (e.g. `myapp`).  
 3. Create an **API key** (`drift_sk_…`) under **API keys** — use it only in **backend** workflows.  
 4. Read [Getting started](./GETTING_STARTED.md) if you have not called the API yet.
@@ -279,7 +279,7 @@ On **402**, show top-up (call **K**) or fiat flow (**L**) depending on `payment_
 
 ## Step 4 — Payments in your app
 
-Configure token packs and card checkout in the [developer portal](https://admin.driftin.live) → **Billing**, then call `POST /tokens/checkout` or the fiat endpoints from [Payments](./PAYMENTS.md). Do not hardcode prices in Bubble — read packs from `GET /tokens/packs`.
+Configure token packs and card checkout in the [developer portal](https://www.niilox.com) → **Billing**, then use the payments module from [Payments](./PAYMENTS.md). Do not hardcode prices in Bubble — read packs from the API.
 
 ---
 

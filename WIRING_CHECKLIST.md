@@ -6,7 +6,7 @@ Use this before going to production. Check each box in order.
 
 ## Account & tenant
 
-- [ ] Developer account at https://admin.driftin.live  
+- [ ] Developer account at https://www.niilox.com  
 - [ ] Tenant `app_id` chosen (lowercase, e.g. `mybrand`)  
 - [ ] `X-App-ID: <app_id>` documented for your team  
 

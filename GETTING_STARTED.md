@@ -4,7 +4,7 @@ Ship your first **Niilox API** call in about 15 minutes.
 
 ## 1. Create your tenant
 
-1. Open https://admin.driftin.live  
+1. Open https://www.niilox.com  
 2. Sign in (Google, email, or magic link).  
 3. **Create account** → choose a tenant id (e.g. `myapp`) and company name.  
 4. You land on the developer dashboard with `X-App-ID: myapp`.

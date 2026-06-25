@@ -1,1 +1,1 @@
-Developer documentation for Niilox API — multi-tenant live video, gigs, P2P, auth, and billing at api.driftin.live. Portal: admin.driftin.live
+Public developer documentation for Niilox API — multi-tenant live video, gigs, P2P, auth, and billing. Portal: www.niilox.com

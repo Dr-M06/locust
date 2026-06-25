@@ -189,7 +189,7 @@ Tenant integrators authenticate with `Authorization: Bearer drift_sk_…` plus `
 | POST | `/platform/keys/{keyID}/rotate` | **admin JWT** | Revoke + mint replacement; returns new `secret` once. |
 | POST | `/platform/test-sign` | **admin JWT** | Body: `{"secret","method","path","body"}` → `{signature, headers, curl_example}` for the dashboard tester. |
 
-**Admin UI:** `https://admin.driftin.live` — separate app in repo `drift-admin/`. Partner devs: grant `users.is_admin` on their `app_id`, then sign in on the admin portal with `?app=<tenant>`.
+**Admin UI:** [www.niilox.com](https://www.niilox.com) — partner admin access via **dev@niilox.com**.
 
 All `/api/v1` routes are rate-limited per IP and per `X-App-ID` (Redis when `REDIS_URL` is set). **Video routes** (`POST /rooms/{id}/join`, go-live, LiveKit tokens) still require a normal user JWT — API keys do not replace end-user sessions.
 
@@ -197,11 +197,11 @@ All `/api/v1` routes are rate-limited per IP and per `X-App-ID` (Redis when `RED
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
-| GET | `/users/me/wallet` | **registered** | `{summary, activity[…]}` with `withdrawable = earned_from_gifts - withdrawn - pending`. Both `spent_on_gifts` and `earned_from_gifts` are inclusive: they tally every creator-economy debit / credit (gifts **and** VIP-room entries). The activity feed adds `vip_paid` (viewer) and `vip_earned` (host) item kinds for each `room_access` row. |
+| GET | `/users/me/wallet` | **registered** | Balance summary and activity feed (gifts, VIP, withdrawals). |
 | GET | `/banks` | — | Non-exhaustive global bank suggestions for the payout typeahead: `[{code, name}, …]`. Optional `?q=` substring filter (case-insensitive). |
 | GET | `/users/me/payout-details` | **registered** | Saved bank account or `{}` if unset. Includes `complete` when bank name, account number (4–34 chars), and account name are present. |
 | PUT | `/users/me/payout-details` | **registered** | Body: `{"bank_name","bank_code"?,"account_number","account_name"}`. `bank_name` is free-text (typed or chosen from suggestions); `bank_code` is auto-filled from the catalog when omitted and `bank_name` matches a known suggestion. |
-| POST | `/users/me/withdrawals` | **registered** | Body: `{"tokens": int >=100}`. Atomically deducts from balance, creates a `pending` withdrawal request. Withdrawable amount is capped at gift earnings. |
+| POST | `/users/me/withdrawals` | **registered** | Body: `{"tokens": int >=100}`. Creates a pending withdrawal request. Rules provided in the integration guide. |
 
 ## Token packs & checkout
 
@@ -211,8 +211,8 @@ All `/api/v1` routes are rate-limited per IP and per `X-App-ID` (Redis when `RED
 | GET | `/tokens/mobile-config` | — | Mobile only: `{ provider: "revenuecat", revenuecat_api_key_apple, revenuecat_api_key_google, packs }`. Use with `react-native-purchases`; do not use `/tokens/checkout` on native. |
 | POST | `/tokens/checkout` | **registered** | **Web only.** Body: `{"pack_id":"pack_150","return":"/lobby/all"}`. Stripe/Flutterwave checkout URL. Mobile must use RevenueCat IAP instead. |
 | POST | `/payments/checkout` | **registered** | Alias of `/tokens/checkout` — provider-neutral name. |
-| POST | `/payments/fiat/booking` | **registered** | **Rodent only.** Body: `{"booking_id":"<uuid>","return":"/path","finish_url":"https://rodent.nomli.cc"}`. Starts Stripe Checkout for a paid session booking (`scheduled_streams` row with `payment_status=pending`). Returns `{"checkout_url":"...","order_id":"...","amount_cents":N}` or `{"already_paid":true}`. Host share **97%** (`BookingHostShareBps = 9700`). Requires Stripe on the `rodent` tenant. |
-| POST | `/payments/fiat/gig` | **registered** | **Geo-Gig only.** Body: `{"gig_id":"<uuid>","provider":"stripe\|flutterwave","finish_url":"geogig://","return":"/gig/{id}"}`. Poster pays gig `price_cents` via Stripe or Flutterwave. Returns `{"checkout_url","order_id","amount_cents","provider"}` or `{"already_paid":true}`. Worker is paid (90% host share) on check-out. Migration: `048_geogig_payments.sql`. |
+| POST | `/payments/fiat/booking` | **registered** | **Rodent only.** Paid session booking checkout — integration guide on request. |
+| POST | `/payments/fiat/gig` | **registered** | **Geo-Gig only.** Poster pays gig price via Stripe or Flutterwave. Worker payout on check-out — integration guide on request. |
 
 ## Scheduled sessions
 
@@ -233,7 +233,7 @@ Paid bookings created via `POST /rodent/bookings` are also `scheduled_streams` r
 
 ## Geo-Gig gigs (`X-App-ID: geogig`)
 
-Local chore/help listings for the [GeoGig](https://github.com/Dr-M06/geogig) mobile app. Integration guide: [GEOGIG.md](./GEOGIG.md). Migrations: `042`–`048` (gigs, sessions, reviews, lifecycle, payments).
+Local chore/help listings for the [GeoGig](https://github.com/Dr-M06/geogig) mobile app. Integration guide: [GEOGIG.md](./GEOGIG.md).
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
@@ -302,11 +302,7 @@ Host-to-client session booking with optional card checkout. Media stays **peer-t
 | PUT | `/rodent/booking-settings` | yes | Body: `{"price_cents":N}` (0 = free, max 500000). **Rodent Pro** required when `price_cents > 0`. |
 | POST | `/rodent/bookings` | **registered** | Book a slot with a host. Body: `{"host_id":"<uuid>","starts_at":"<RFC3339>","timezone":"...","title":"Session","duration_min":60}` (duration 15–480, default 60). Returns `{id,payment_required,amount_cents,payment_status}` where `payment_status` is `waived` (free) or `pending` (paid). **409** if the slot overlaps an existing booking. |
 
-**Checkout flow (paid):**
-
-1. Client calls `POST /rodent/bookings` → `payment_required: true`, `payment_status: pending`.
-2. Client calls `POST /payments/fiat/booking` with `booking_id` → redirect to Stripe Checkout.
-3. Stripe webhook (`commerce_kind=booking`) marks the row `payment_status=paid` and credits the host’s token balance (97% of gross, same basis-points model as other commerce).
+**Checkout flow (paid):** Book slot → fiat checkout → webhook confirms payment. Full flow: **dev@niilox.com**.
 
 Integrators can build their own booking UI against these routes; the static Rodent site may omit booking UI while the API remains available.
 
@@ -336,7 +332,7 @@ WebRTC signaling and encrypted async file handoff for the `rodent` tenant. Not d
 | POST | `/admin/verifications/{id}/approve` | **admin** | Marks `users.id_verified = true`. |
 | POST | `/admin/verifications/{id}/reject` | **admin** | Rejects without flipping the verified flag. |
 
-`adminOnly` is satisfied when `users.is_admin = true` for the calling user in the current tenant.
+`adminOnly` routes require an admin account on the tenant — contact **dev@niilox.com**.
 
 ## Webhooks
 
@@ -391,7 +387,7 @@ Both are server → client only. Clients should reconnect with exponential backo
 | `user:offline` | `{user_id}` |
 | `notification` | `Notification` |
 | `notification:unread` | `{count}` |
-| `lobby:seats` | `{room_id, seats_taken, seat_limit}` — VIP room seat counter pushed to every signed-in user so lobby cards update in real time. |
+| `lobby:seats` | VIP lobby seat counter — integration guide on request |
 
 Online / offline events fire only for the peer set returned by `social.PeersToNotify` (DM history ∪ follow graph), capped at 500 peers per transition.
 

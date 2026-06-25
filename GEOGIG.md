@@ -131,7 +131,7 @@ See [WORKER_SAFETY.md](./WORKER_SAFETY.md). Full integration guide: **dev@niilox
 
 ## Admin & ops
 
-- **Developer portal:** https://admin.driftin.live (`/portal`, tenant `geogig`)
+- **Developer portal:** https://www.niilox.com (`/portal`, tenant `geogig`)
 - **Ops:** verifications queue, announcements, push categories — grouped under `/ops`
 - **Env on API host:** `GEOGIG_APP_URL`, `CORS_EXTRA_ORIGINS` (web app origin), Africa's Talking keys
 

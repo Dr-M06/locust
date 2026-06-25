@@ -6,7 +6,7 @@
 |---|---|
 | **API** | `https://api.driftin.live/api/v1` |
 | **Health** | `https://api.driftin.live/health` |
-| **Developer portal** | [admin.driftin.live](https://admin.driftin.live) — keys, billing, usage, in-browser docs |
+| **Developer portal** | [www.niilox.com](https://www.niilox.com) — keys, billing, usage, in-browser docs |
 | **Status** | [status.driftin.live](https://status.driftin.live) |
 
 Every request needs header **`X-App-ID: <your_tenant>`**. User actions use a session JWT; server integrations use **`drift_sk_…`** API keys.
@@ -34,7 +34,7 @@ Quick summary:
 
 ## Quick start
 
-**1. Create a tenant** at [admin.driftin.live](https://admin.driftin.live) → sign in → **Create account** → pick an app id (e.g. `myapp`).
+**1. Create a tenant** at [www.niilox.com](https://www.niilox.com) → sign in → **Create account** → pick an app id (e.g. `myapp`).
 
 **2. Ping the API** with your key:
 
@@ -126,7 +126,7 @@ Reference apps: [GeoGig](https://github.com/Dr-M06/geogig) · [Drift](https://dr
 | `geogig` | GeoGig — local gigs, safety, P2P video glance |
 | `rodent` | Rodent — peer sessions, Drop, paid bookings |
 | `rabbaly` | Rabbaly |
-| *yours* | Provision via the [developer portal](https://admin.driftin.live) |
+| *yours* | Provision via the [developer portal](https://www.niilox.com) |
 
 ---
 
@@ -143,7 +143,7 @@ Reference apps: [GeoGig](https://github.com/Dr-M06/geogig) · [Drift](https://dr
 
 This repository is the **public documentation mirror** for integrators. It contains guides only — no server source code or production secrets.
 
-- **In-browser docs:** [admin.driftin.live/portal/dashboard/docs](https://admin.driftin.live/portal/dashboard/docs)
-- **About Niilox:** named after [Niilo](https://admin.driftin.live/about) — see the portal about page
+- **In-browser docs:** [www.niilox.com/portal/dashboard/docs](https://www.niilox.com/portal/dashboard/docs)
+- **About Niilox:** [www.niilox.com/about](https://www.niilox.com/about)
 
-Questions or access requests: sign in at [admin.driftin.live](https://admin.driftin.live) or open an issue on this repo.
+Questions or integration access: [dev@niilox.com](mailto:dev@niilox.com) or open an issue on this repo.

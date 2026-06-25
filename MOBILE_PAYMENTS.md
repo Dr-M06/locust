@@ -24,7 +24,7 @@ Purchases.purchasePackage() ──► Store billing ──► Webhook POST /webh
 
 ## Store product ids
 
-Configured in `internal/payments/provider.go` (`StoreProductID` on each pack):
+Configured per tenant in the developer portal.
 
 | Pack | Tokens | Store product id |
 |------|--------|------------------|

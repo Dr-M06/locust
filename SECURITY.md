@@ -10,7 +10,7 @@ This document is for anyone running Drift in production or considering reselling
 - `middleware.RequireRegistered` rejects guest tokens with 403 on every write route (room creation, chat, gifts, payments, DMs, withdrawals, stage actions, moderation, ID verification).
 - Native auth providers issue Drift access + refresh tokens; refresh sessions are stored hashed in `auth_sessions`.
 - Per-tenant LiveKit tokens are minted with the tenant's own LiveKit secret (`apps.livekit_secret`). One tenant cannot mint tokens for another.
-- Admin endpoints (`/admin/verifications/*`) check `users.is_admin` for the calling user in the current tenant on every call. There is no `is_admin` claim in the JWT.
+- Admin endpoints check server-side admin membership per tenant. There is no `is_admin` claim in the JWT.
 
 ### Tenant isolation
 

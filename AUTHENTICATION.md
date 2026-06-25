@@ -86,34 +86,7 @@ Tokens are HS256-signed with the **tenant's** LiveKit secret (`apps.livekit_secr
 
 ## Admin role
 
-`users.is_admin = true` (per tenant) gates the ID-verification review endpoints under `/api/v1/admin/verifications`. There's no separate JWT role — admins use their normal Drift JWT and the `verification.adminOnly` middleware checks the DB column on each call.
-
-### Granting admin
-
-Two interchangeable paths — pick whichever fits your ops workflow.
-
-**1. Env-driven (recommended).** Set `ADMIN_EMAILS` in `.env` (or your Docker / k8s / Supabase Edge Function environment) to a comma-separated list. The server then:
-
-- Runs a one-shot `UPDATE users SET is_admin = true WHERE lower(email) = ANY(...)` on boot to retroactively promote already-existing users.
-- On every successful native sign-in / token issuance, promotes the user if their email is in the list. Idempotent.
-
-```env
-ADMIN_EMAILS=[email protected],[email protected]
-```
-
-This is **promote-only**. Removing an email from the env will *not* revoke admin — that prevents accidental self-lockout. Revoke explicitly with SQL when needed.
-
-**2. Manual SQL.** Still works the same as before:
-
-```sql
-UPDATE users SET is_admin = true WHERE app_id = 'drift' AND email = '[email protected]';
-```
-
-Use this when you want per-tenant control (env promotion applies across tenants by email) or for one-off revocation:
-
-```sql
-UPDATE users SET is_admin = false WHERE email = '[email protected]';
-```
+ID-verification review endpoints require an admin account on your tenant. Contact **dev@niilox.com** to request ops or partner admin access.
 
 ## Security boundaries
 
