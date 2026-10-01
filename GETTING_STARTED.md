@@ -1,6 +1,8 @@
 # Getting started
 
-Ship your first **Niilox API** call in about 15 minutes.
+> **Want a stream event in ~5 minutes?** → [**STREAM_HEALTH.md**](./STREAM_HEALTH.md) (`monitor/status`, go live, catch `quality_warn` / `still_live_prompt`).
+
+This page is platform plumbing: tenant, API key, and a guest JWT (~15 min).
 
 ## 1. Create your tenant
 
